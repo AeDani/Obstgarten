@@ -1,10 +1,13 @@
 
-const dice = ["Rabe","Korb","red","green","blue","yellow"]
+const dice = ["bird","basket","red","green","blue","yellow"]
+const diceImage = ['owl.png','shopping-basket.png', 'apple.png', 'cherry.png','orange.png','pear.png']
+
 let diceColor = ''
 let actualDiceIndex = 0
 let emptyTrees = 0
 let birdInGarden = false
 let gameOver = false
+
 
 
 const setUpEventHandlers = function() {
@@ -25,25 +28,29 @@ const playOneRound = function(){
 }
 
 const setDiceColor = function(){
-    const diceFace = document.querySelector('.dice-face')
+    const diceFace = document.querySelector('.dice')
     diceColor = dice[actualDiceIndex]
-    diceFace.textContent = diceColor
+    diceFace.style.backgroundImage = `url(ressources/img/${diceImage[actualDiceIndex]})`
+    diceFace.style.backgroundRepeat = "no-repeat";
+    diceFace.style.backgroundPosition = "center";
+    diceFace.style.backgroundSize = "contain"
+    diceFace.textContent = ""
 }
 
 const moveItems = function() {
     // Actions according to the dice face
-    if (diceColor !== "Rabe" && diceColor !== "Korb"){
+    if (diceColor !== "bird" && diceColor !== "basket"){
         // color on dice
-        const ulToRemoveFrom = document.querySelector(`.tree-${diceColor} ul`)
-        const ulToAddTo = document.querySelector(`.basket-${diceColor} ul`)
+        const ulToRemoveFrom = document.querySelector(`.tree.${diceColor} ul`)
+        const ulToAddTo = document.querySelector(`.basket.${diceColor} ul`)
         moveFruit(ulToRemoveFrom, ulToAddTo)
-    } else if(diceColor === "Korb"){
+    } else if(diceColor === "basket"){
         // basket on dice
         const divTree = getLongestTree()
-        const ulToRemoveFrom = divTree.children[0]
+        const ulToRemoveFrom = divTree.children[1]
 
-        const   treeColor = divTree.className.split('-')[1]
-        const ulToAddTo = document.querySelector(`.basket-${treeColor} ul`)
+        const treeColor = divTree.className.split(" ")[1]
+        const ulToAddTo = document.querySelector(`.basket.${treeColor} ul`)
         moveFruit(ulToRemoveFrom, ulToAddTo)
     } else {
         // bird
@@ -84,10 +91,10 @@ const moveBird = function(){
 }
 
 const getLongestTree= function(){
-    trees = document.querySelectorAll('.garden div')
+    trees = document.querySelectorAll('.tree')
     fruits = []
     for(let tree of trees){
-        fruits.push(tree.children[0].children.length)
+        fruits.push(tree.children[1].children.length)
     }
     const i = fruits.indexOf(Math.max(...fruits));
     return trees[i]
